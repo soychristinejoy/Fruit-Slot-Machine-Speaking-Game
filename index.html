@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ping He Fruit Slot Speaking Game</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: url('https://img.freepik.com/premium-photo/fruit-machines-retroinspired-casino-games-featuring-array-colorful-fruit-symbols-these-classic-slots-offer-more-than-just-simple-spins-generated-by-ai_661108-8578.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Rich dark vignette overlay for depth */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.85) 100%);
+    z-index: -1;
+}
+
+.container {
+    max-width: 1650px;
+    margin: auto;
+    padding: 15px;
+    text-align: center;
+    position: relative;
+    width: 100%;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* FLOATING COLLAPSIBLE CONTROL MENU (SP1 / SP2 / SHOW ANSWER) */
+.mode-toggle-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+}
+
+.mode-drawer {
+    display: flex;
+    background: rgba(0, 0, 0, 0.9);
+    border: 3px solid #ffd700;
+    border-radius: 30px;
+    padding: 6px;
+    gap: 6px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.4s ease-in-out;
+    white-space: nowrap;
+}
+
+.mode-toggle-container.expanded .mode-drawer {
+    max-width: 420px;
+    opacity: 1;
+    padding: 6px 12px;
+}
+
+.drawer-btn {
+    border: none;
+    border-radius: 20px;
+    padding: 10px 18px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.drawer-btn.active {
+    border: 2px solid #fff;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px #ffd700;
+}
+
+.drawer-btn.blue { background: #0288d1; }
+.drawer-btn.purple { background: #8e24aa; }
+.drawer-btn.gold { background: #f57f17; }
+.drawer-btn.gold.showing { background: #2e7d32; }
+
+.toggle-trigger-btn {
+    background: linear-gradient(135deg, #ffd700, #ffa000);
+    color: #263238;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    font-size: 18px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+    z-index: 1001;
+}
+
+.toggle-trigger-btn:hover {
+    transform: scale(1.1);
+}
+
+/* AUTHENTIC ARCADE FONT & MAXIMIZED 1-LINE MARQUEE */
+.arcade-marquee {
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    font-size: 64px;
+    font-weight: 900;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    white-space: nowrap;
+    overflow: visible;
+    margin-bottom: 40px;
+    text-shadow: 0 0 20px #ffea00, 0 0 40px #ff6f00, 0 0 65px #ff3d00, 0 6px 12px rgba(0,0,0,0.95);
+    animation: marqueeGlow 1.8s infinite alternate;
+}
+
+@keyframes marqueeGlow {
+    from { text-shadow: 0 0 15px #ffd700, 0 0 30px #ff9800, 0 0 45px #ff5722; }
+    to { text-shadow: 0 0 30px #ffeb3b, 0 0 60px #ff6f00, 0 0 90px #ff3d00; }
+}
+
+/* CLEAN BOLD GOLD TITLE (SECOND SLIDE) */
+.game-screen-title {
+    font-size: 44px;
+    font-weight: 900;
+    color: #ffd700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.9);
+}
+
+/* REALISTIC ARCADE CABINET WRAPPER */
+.cabinet-outer-wrapper {
+    position: relative;
+    max-width: 1520px;
+    margin: 10px auto;
+}
+
+/* 7-COLUMN SLOT MACHINE CABINET */
+.slot-machine-cabinet {
+    background: linear-gradient(180deg, #d4af37, #aa771c);
+    border: 10px solid #fff;
+    border-radius: 30px;
+    padding: 25px;
+    max-width: 1440px;
+    margin: 0 auto;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.7), inset 0 6px 20px rgba(255,255,255,0.4);
+}
+
+/* 7 COLUMNS, 1 ROW - LARGER FITTED BOX */
+.slots-container {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+    background: #111;
+    border: 8px solid #ffd700;
+    border-radius: 18px;
+    padding: 15px;
+    box-shadow: inset 0 0 25px rgba(0,0,0,0.9);
+}
+
+.slot-box {
+    background: #fff;
+    border-radius: 14px;
+    height: 195px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border: 4px solid #b8860b;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* ARCADE GLOW EFFECT FOR CHOSEN FRUIT */
+.slot-box.arcade-glow {
+    border-color: #ffea00;
+    background: #fffde7;
+    transform: scale(1.06);
+    box-shadow: 0 0 30px #ffd700, 0 0 50px #ff6f00;
+    animation: arcadePulse 0.8s infinite alternate;
+}
+
+@keyframes arcadePulse {
+    from { box-shadow: 0 0 15px #ffd700, inset 0 0 12px #ffea00; }
+    to { box-shadow: 0 0 35px #ffea00, 0 0 60px #ff9800, inset 0 0 25px #ffeb3b; }
+}
+
+.slot-fruit-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+.blur-spin {
+    filter: blur(5px) grayscale(20%);
+    transform: scale(0.95);
+}
+
+/* ATTACHED SIDE SLOT MACHINE LEVER (HANDLE) */
+.arcade-lever {
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 65px;
+    height: 230px;
+    background: linear-gradient(90deg, #b71c1c, #e53935);
+    border: 4px solid #ffd700;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 5px 10px 25px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    z-index: 10;
+    transition: all 0.15s ease;
+}
+
+.arcade-lever:hover {
+    filter: brightness(1.15);
+}
+
+.arcade-lever:active {
+    transform: translateY(-50%) rotate(15deg);
+}
+
+.lever-ball {
+    width: 45px;
+    height: 45px;
+    background: radial-gradient(circle at 30% 30%, #ff5252, #b71c1c);
+    border: 3px solid #ffd700;
+    border-radius: 50%;
+    box-shadow: inset 0 3px 6px rgba(255,255,255,0.6), 0 4px 8px rgba(0,0,0,0.4);
+}
+
+.lever-shaft {
+    width: 14px;
+    height: 130px;
+    background: linear-gradient(90deg, #e0e0e0, #9e9e9e, #616161);
+    border: 1px solid #424242;
+    border-radius: 5px;
+}
+
+.lever-base {
+    width: 40px;
+    height: 25px;
+    background: #424242;
+    border: 2px solid #ffd700;
+    border-radius: 6px;
+}
+
+/* BEAUTIFUL GLASSMORPHISM CARD FOR MENU (OPTIMIZED SPACE) */
+.card {
+    background: rgba(30, 20, 15, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    color: #fff;
+    border-radius: 35px;
+    padding: 45px 55px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.2);
+    margin-bottom: 25px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: transform 0.3s ease;
+}
+
+/* ELEGANT TEACHER CREDITS */
+.external-credits {
+    margin-top: 25px;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+}
+
+.external-credits .names {
+    font-size: 26px;
+    font-weight: 700;
+    color: #ffeb3b;
+    letter-spacing: 0.5px;
+}
+
+.external-credits .role {
+    font-size: 17px;
+    color: #e0e0e0;
+    font-style: italic;
+    margin-top: 5px;
+    letter-spacing: 1px;
+}
+
+/* MODAL POP-UP STYLES */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #2a1810, #3d2215);
+    border: 4px solid #ffd700;
+    border-radius: 30px;
+    padding: 40px;
+    max-width: 580px;
+    width: 90%;
+    text-align: left;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.show .modal-content {
+    transform: scale(1);
+}
+
+.modal-content h3 {
+    color: #ffd700;
+    margin-top: 0;
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.modal-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 20px;
+    line-height: 2.2;
+}
+
+.modal-content li {
+    margin-bottom: 8px;
+}
+
+.close-modal-btn {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, #e53935, #b71c1c);
+    border: 3px solid #ffd700;
+    color: white;
+    font-size: 18px;
+    font-weight: 800;
+    padding: 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 30px;
+    text-transform: uppercase;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.close-modal-btn:hover {
+    filter: brightness(1.15);
+    transform: scale(1.02);
+}
+
+/* STUNNING PLEASING BUTTONS */
+.menu-btn {
+    display: block;
+    width: 100%;
+    border: 3px solid #ffd700;
+    border-radius: 25px;
+    padding: 20px 30px;
+    color: white;
+    font-size: 22px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    margin: 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.menu-btn:hover {
+    filter: brightness(1.12);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+}
+
+.menu-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+}
+
+.start-btn {
+    background: linear-gradient(135deg, #e53935, #c62828);
+    border-color: #ffeb3b;
+}
+
+.howto-btn {
+    background: linear-gradient(135deg, #0288d1, #01579b);
+    border-color: #81d4fa;
+}
+
+/* HUGE SENTENCE PATTERN BOARDS */
+.pattern-display-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 25px;
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media(max-width: 1100px) {
+    .arcade-lever {
+        display: none;
+    }
+    .pattern-display-area {
+        grid-template-columns: 1fr;
+    }
+    .slots-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.speaking-box {
+    background: rgba(255, 255, 255, 0.96);
+    color: #263238;
+    border-radius: 24px;
+    padding: 32px 35px;
+    text-align: left;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.customer-box {
+    border: 5px solid #1565c0;
+}
+
+.shopkeeper-box {
+    border: 5px solid #8e24aa;
+}
+
+.box-header {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px dashed rgba(0,0,0,0.1);
+}
+
+.customer-box .box-header { color: #1565c0; }
+.shopkeeper-box .box-header { color: #8e24aa; }
+
+.huge-sentence {
+    font-size: 42px;
+    font-weight: bold;
+    line-height: 1.5;
+    color: #263238;
+}
+
+.huge-blank {
+    display: inline-block;
+    background: white;
+    border: 3px dashed #ffb300;
+    color: #e65100;
+    border-radius: 14px;
+    padding: 2px 18px;
+    min-width: 95px;
+    text-align: center;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.huge-blank.revealed {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 3px solid #4caf50;
+}
+
+.badge-student {
+    display: inline-block;
+    background: #263238;
+    color: white;
+    padding: 2px 16px;
+    border-radius: 12px;
+    font-size: 28px;
+    vertical-align: middle;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- START / MENU SCREEN (FIRST SLIDE) -->
+    <div id="startScreenWrapper">
+        <!-- 1-LINE MAXIMIZED ARCADE MARQUEE TITLE (FIRST SLIDE) -->
+        <div class="arcade-marquee">🎰 PING HE FRUIT SLOT MACHINE 🎰</div>
+
+        <div class="card" id="startScreen">
+            <div style="width: 100%; max-width: 440px; margin: 0 auto;">
+                <button class="menu-btn howto-btn" onclick="openModal()">📖 How to Play</button>
+                <button class="menu-btn start-btn" onclick="startGame()">🚀 Start Game</button>
+            </div>
+        </div>
+
+        <!-- TEACHER CREDITS OUTSIDE THE BOX -->
+        <div class="external-credits" id="externalCredits">
+            <div class="names">Teacher Christine and Ms. Li</div>
+            <div class="role">English Teachers</div>
+        </div>
+    </div>
+
+    <!-- POP-UP MODAL FOR HOW TO PLAY -->
+    <div class="modal-overlay" id="modalOverlay" onclick="outsideClick(event)">
+        <div class="modal-content">
+            <h3>📖 How to Play</h3>
+            <ul>
+                <li>🎯 Pull the red lever.</li>
+                <li>👀 Look at the shining fruit.</li>
+                <li>🔢 Count the fruit.</li>
+                <li>👨‍🎓 Look at the student numbers.</li>
+                <li>🙋 If you see your number, stand up and speak your part.</li>
+                <li>🗣 Listen to your partner and speak together. 🤝</li>
+            </ul>
+            <button class="close-modal-btn" onclick="closeModal()">Got It!</button>
+        </div>
+    </div>
+
+    <!-- GAME SCREEN (SECOND SLIDE) -->
+    <div id="gameScreen" class="hidden">
+
+        <!-- FLOATING COLLAPSIBLE CONTROL MENU (SP1 / SP2 / SHOW ANSWER) -->
+        <div class="mode-toggle-container" id="modeToggleContainer">
+            <div class="mode-drawer">
+                <button class="drawer-btn blue active" id="btnSp1" onclick="setMode('howmany')">SP1</button>
+                <button class="drawer-btn purple" id="btnSp2" onclick="setMode('does')">SP2</button>
+                <button class="drawer-btn gold" id="btnShowAnswer" onclick="toggleShowAnswer()">👀 ANSWER</button>
+            </div>
+            <button class="toggle-trigger-btn" onclick="toggleModeDrawer()" title="Toggle Menu">⚙</button>
+        </div>
+
+        <!-- CLEAN BOLD GOLD TITLE (SECOND SLIDE) -->
+        <div class="game-screen-title">Ping He Fruit Slot Machine</div>
+
+        <!-- 7-COLUMN CABINET WITH ATTACHED SIDE LEVER -->
+        <div class="cabinet-outer-wrapper">
+            <div class="slot-machine-cabinet">
+                <div class="slots-container" id="slotsContainer">
+                    <!-- 7 Columns generated dynamically -->
+                </div>
+            </div>
+
+            <!-- PULL LEVER ATTACHED TO THE SIDE OF THE MACHINE -->
+            <div class="arcade-lever" onclick="triggerSpin()" title="Pull to Spin!">
+                <div class="lever-ball"></div>
+                <div class="lever-shaft"></div>
+                <div class="lever-base"></div>
+            </div>
+        </div>
+
+        <!-- HUGE SENTENCE PATTERN BOARDS (MAXIMIZED) -->
+        <div class="pattern-display-area">
+            
+            <!-- STUDENT 1 BOARD -->
+            <div class="speaking-box customer-box">
+                <div class="box-header" id="customerHeader">STUDENT (?)</div>
+                <div class="huge-sentence" id="customerSentence">
+                    Pull the lever to start!
+                </div>
+            </div>
+
+            <!-- STUDENT 2 BOARD -->
+            <div class="speaking-box shopkeeper-box">
+                <div class="box-header" id="shopkeeperHeader">STUDENT (?)</div>
+                <div class="huge-sentence" id="shopkeeperSentence">
+                    Waiting for slot spin...
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+const fruits = [
+    { name: "apples", image: "https://jooinn.com/images/red-apple-fruit-1.jpg" },
+    { name: "bananas", image: "https://i5.walmartimages.com/seo/Fresh-Banana-Each_5939a6fa-a0d6-431c-88c6-b4f21608e4be.f7cd0cc487761d74c69b7731493c1581.jpeg" },
+    { name: "oranges", image: "https://static.vecteezy.com/system/resources/previews/024/991/951/non_2x/orange-fresh-orange-orange-orange-transparent-background-png.png" },
+    { name: "grapes", image: "https://img.freepik.com/premium-photo/red-grape-berry-bunch-isolated-white-background-cutout_272595-1513.jpg" },
+    { name: "papayas", image: "https://tse4.mm.bing.net/th/id/OIP.uGFy1UQLHwDMrl0ySOBTggHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" },
+    { name: "guavas", image: "https://static.vecteezy.com/system/resources/thumbnails/011/046/950/small_2x/guava-fruit-with-leaves-isolated-on-the-white-background-photo.jpg" },
+    { name: "pineapples", image: "https://i.pinimg.com/originals/75/18/bf/7518bf0162e64001bf1c429153906314.jpg" }
+];
+
+let currentMode = "howmany";
+let targetFruitIndex = 0;
+let currentStudent1 = 1;
+let currentStudent2 = 2;
+let actualMatchingCount = 3;
+let currentPerson = "he";
+let currentPronounSp1 = "you";
+let isSpinning = false;
+let showAnswerState = false;
+
+// Stores the random fruit index for each of the 7 columns
+let columnFruits = [0, 0, 0, 0, 0, 0, 0];
+
+// Audio Context for arcade beeps
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playBeep(freq, type, duration) {
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+}
+
+function openModal() {
+    document.getElementById("modalOverlay").classList.add("show");
+}
+
+function closeModal() {
+    document.getElementById("modalOverlay").classList.remove("show");
+}
+
+function outsideClick(event) {
+    if (event.target.id === "modalOverlay") {
+        closeModal();
+    }
+}
+
+function startGame() {
+    document.getElementById("startScreenWrapper").classList.add("hidden");
+    document.getElementById("gameScreen").classList.remove("hidden");
+    triggerSpin();
+}
+
+function toggleModeDrawer() {
+    const container = document.getElementById("modeToggleContainer");
+    container.classList.toggle("expanded");
+}
+
+function renderSlots(isBlur = false) {
+    const container = document.getElementById("slotsContainer");
+    container.innerHTML = "";
+    
+    for (let c = 0; c < 7; c++) {
+        let fruit;
+        if (isBlur) {
+            fruit = fruits[Math.floor(Math.random() * fruits.length)];
+            container.innerHTML += `
+                <div class="slot-box">
+                    <img src="${fruit.image}" class="slot-fruit-img blur-spin" alt="fruit">
+                </div>
+            `;
+        } else {
+            fruit = fruits[columnFruits[c]];
+            let isTargetCol = (columnFruits[c] === targetFruitIndex);
+            let glowClass = isTargetCol ? " arcade-glow" : "";
+            container.innerHTML += `
+                <div class="slot-box${glowClass}">
+                    <img src="${fruit.image}" class="slot-fruit-img" alt="fruit">
+                </div>
+            `;
+        }
+    }
+}
+
+function setMode(mode) {
+    currentMode = mode;
+    showAnswerState = false;
+    document.getElementById("btnShowAnswer").classList.remove("showing");
+    document.getElementById("btnShowAnswer").innerText = "👀 ANSWER";
+    
+    if (mode === 'howmany') {
+        document.getElementById("btnSp1").classList.add("active");
+        document.getElementById("btnSp2").classList.remove("active");
+    } else {
+        document.getElementById("btnSp2").classList.add("active");
+        document.getElementById("btnSp1").classList.remove("active");
+    }
+
+    updateDisplay();
+}
+
+function toggleShowAnswer() {
+    if (isSpinning) return;
+    showAnswerState = !showAnswerState;
+    const btn = document.getElementById("btnShowAnswer");
+    
+    if (showAnswerState) {
+        btn.classList.add("showing");
+        btn.innerText = "🙈 HIDE";
+    } else {
+        btn.classList.remove("showing");
+        btn.innerText = "👀 ANSWER";
+    }
+    updateDisplay();
+}
+
+function triggerSpin() {
+    if (isSpinning) return;
+    isSpinning = true;
+    showAnswerState = false;
+    const btn = document.getElementById("btnShowAnswer");
+    btn.classList.remove("showing");
+    btn.innerText = "👀 ANSWER";
+
+    let counter = 0;
+    let spinInterval = setInterval(() => {
+        currentStudent1 = Math.floor(Math.random() * 26) + 1;
+        do {
+            currentStudent2 = Math.floor(Math.random() * 26) + 1;
+        } while (currentStudent2 === currentStudent1);
+
+        document.getElementById("customerHeader").innerHTML = `STUDENT <span class="badge-student">${currentStudent1}</span>`;
+        document.getElementById("shopkeeperHeader").innerHTML = `STUDENT <span class="badge-student">${currentStudent2}</span>`;
+        
+        renderSlots(true);
+        playBeep(350 + Math.random() * 350, 'square', 0.04);
+
+        counter++;
+        if (counter >= 22) {
+            clearInterval(spinInterval);
+            
+            // Finalize unique student pairings without duplication
+            currentStudent1 = Math.floor(Math.random() * 26) + 1;
+            do {
+                currentStudent2 = Math.floor(Math.random() * 26) + 1;
+            } while (currentStudent2 === currentStudent1);
+
+            // Randomize pronoun for SP1: either "you" or "they"
+            currentPronounSp1 = Math.random() < 0.5 ? "you" : "they";
+
+            // Randomize pronoun for SP2 (he, she)
+            currentPerson = Math.random() < 0.5 ? "he" : "she";
+
+            // Probability control: 2, 3, 4, 5, or all 7 matching fruits
+            targetFruitIndex = Math.floor(Math.random() * fruits.length);
+            let matchCountChoices = [2, 3, 4, 5, 7];
+            let targetCount = matchCountChoices[Math.floor(Math.random() * matchCountChoices.length)];
+
+            let reelIndices = [0, 1, 2, 3, 4, 5, 6].sort(() => Math.random() - 0.5);
+
+            for (let c = 0; c < 7; c++) {
+                if (c < targetCount) {
+                    columnFruits[reelIndices[c]] = targetFruitIndex;
+                } else {
+                    let otherFruit;
+                    do {
+                        otherFruit = Math.floor(Math.random() * fruits.length);
+                    } while (otherFruit === targetFruitIndex);
+                    columnFruits[reelIndices[c]] = otherFruit;
+                }
+            }
+
+            actualMatchingCount = columnFruits.filter(idx => idx === targetFruitIndex).length;
+
+            playBeep(880, 'triangle', 0.4); // Win chime
+            
+            renderSlots(false);
+            updateDisplay();
+            isSpinning = false;
+        }
+    }, 80);
+}
+
+function updateDisplay() {
+    document.getElementById("customerHeader").innerHTML = `STUDENT <span class="badge-student">${currentStudent1}</span>`;
+    document.getElementById("shopkeeperHeader").innerHTML = `STUDENT <span class="badge-student">${currentStudent2}</span>`;
+
+    const fruitName = fruits[targetFruitIndex].name;
+    const capitalPerson = currentPerson.charAt(0).toUpperCase() + currentPerson.slice(1);
+    const revClass = showAnswerState ? "huge-blank revealed" : "huge-blank";
+
+    if (currentMode === "howmany") {
+        // SP1 updated: Ask box uses "you" or "they"
+        // If "you", answer randomly chooses between "I" or "We"
+        // If "they", answer uses "They"
+        let answerPronoun = "";
+        let capitalAnswerPronoun = "";
+        
+        if (currentPronounSp1 === "you") {
+            answerPronoun = Math.random() < 0.5 ? "I" : "we";
+            capitalAnswerPronoun = answerPronoun.charAt(0).toUpperCase() + answerPronoun.slice(1);
+        } else {
+            answerPronoun = "they";
+            capitalAnswerPronoun = "They";
+        }
+
+        document.getElementById("customerSentence").innerHTML = `
+            “How many <span class="${revClass}">${showAnswerState ? fruitName : '______'}</span> do <span style="color:#1565c0;">${currentPronounSp1}</span> need?”
+        `;
+        document.getElementById("shopkeeperSentence").innerHTML = `
+            “<span style="color:#8e24aa;">${capitalAnswerPronoun}</span> need <span class="${revClass}">${showAnswerState ? actualMatchingCount : '______'}</span> <span class="${revClass}">${showAnswerState ? fruitName : '______'}</span>.”
+        `;
+    } else {
+        // SP2 pattern: "he/she" is visible, only number and fruit are missing words/blanks
+        document.getElementById("customerSentence").innerHTML = `
+            “How many <span class="${revClass}">${showAnswerState ? fruitName : '______'}</span> does <span style="color:#1565c0;">${currentPerson}</span> need?”
+        `;
+        document.getElementById("shopkeeperSentence").innerHTML = `
+            “<span style="color:#8e24aa;">${capitalPerson}</span> needs <span class="${revClass}">${showAnswerState ? actualMatchingCount : '______'}</span> <span class="${revClass}">${showAnswerState ? fruitName : '______'}</span>.”
+        `;
+    }
+}
+</script>
+
+</body>
+</html>
